@@ -1,22 +1,30 @@
 package com.balljoint.mktsui.nd_trial01;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.balljoint.mktsui.nd_trial01.HomeFragment;
+import com.balljoint.mktsui.nd_trial01.UserFragment;
 
-/* This is a comment to test if GIT is successful */
+// http://www.androidhive.info/2013/11/android-sliding-menu-using-navigation-drawer/
+// http://guides.codepath.com/android/fragment-navigation-drawer
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Handler fHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +91,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -96,8 +104,39 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+        loadFragment(id);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private Fragment getFragment(int menuId) {
+        switch (menuId) {
+            case R.id.nav_camera:
+                return new UserFragment();
+            default:
+                return new HomeFragment();
+
+        }
+    }
+
+    private void loadFragment(int Id) {
+        final int menuId = Id;
+
+        Runnable fRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Fragment fragment = getFragment(menuId);
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                fragmentTransaction.replace(R.id.flContent,fragment).commitAllowingStateLoss();
+            }
+        };
+
+        if (fRunnable != null) {
+            fHandler.post(fRunnable);
+        }
+
     }
 }
