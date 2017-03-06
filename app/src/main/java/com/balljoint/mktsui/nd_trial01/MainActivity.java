@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // no preference for which fragment to load, choose 0
+        loadFragment(0);
     }
 
     @Override
@@ -121,22 +124,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void loadFragment(int Id) {
-        final int menuId = Id;
+    private void loadFragment(int menuId) {
 
-        Runnable fRunnable = new Runnable() {
-            @Override
-            public void run() {
-                Fragment fragment = getFragment(menuId);
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-                fragmentTransaction.replace(R.id.flContent,fragment).commitAllowingStateLoss();
-            }
-        };
+        Fragment fragment = getFragment(menuId);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        fragmentTransaction.replace(R.id.flContent,fragment).commitAllowingStateLoss();
 
-        if (fRunnable != null) {
-            fHandler.post(fRunnable);
-        }
 
     }
 }
